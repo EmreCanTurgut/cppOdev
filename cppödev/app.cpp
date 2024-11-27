@@ -1,0 +1,208 @@
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <iomanip>
+#include <stdexcept>
+
+using namespace std;
+
+class Student {
+private:
+    string* names;
+    string* studentNumbers;
+    float* midterms;
+    float* secondExams;
+    float* homeworks;
+    float* finals;
+    int* attendanceCounts;
+    float* averages;
+
+    int studentCount;
+
+public:
+    Student();
+    ~Student();
+    void readFromCSV(const string& filename);
+    void average();
+    void print(int option = -1, const string& outputFile = "");
+};
+
+// Constructor
+Student::Student() : names(nullptr), studentNumbers(nullptr), midterms(nullptr),
+                     secondExams(nullptr), homeworks(nullptr), finals(nullptr),
+                     attendanceCounts(nullptr), averages(nullptr), studentCount(0) {}
+
+// Destructor
+Student::~Student() {
+    delete[] names;
+    delete[] studentNumbers;
+    delete[] midterms;
+    delete[] secondExams;
+    delete[] homeworks;
+    delete[] finals;
+    delete[] attendanceCounts;
+    delete[] averages;
+}
+
+// readFromCSV function
+void Student::readFromCSV(const string& filename) {
+    ifstream file(filename);
+    if (!file.is_open()) {
+        cerr << "Dosya acilamadi: " << filename << endl;
+        return;
+    }
+
+    string line;
+    getline(file, line); // Baslik satirini atla
+
+    int count = 0;
+    while (getline(file, line)) {
+        count++;
+    }
+    file.clear();
+    file.seekg(0);
+    getline(file, line);
+
+    studentCount = count;
+
+    names = new string[studentCount];
+    studentNumbers = new string[studentCount];
+    midterms = new float[studentCount];
+    secondExams = new float[studentCount];
+    homeworks = new float[studentCount];
+    finals = new float[studentCount];
+    attendanceCounts = new int[studentCount];
+    averages = new float[studentCount];
+
+    int i = 0;
+    while (getline(file, line)) {
+        stringstream ss(line);
+        string value;
+
+        try {
+            getline(ss, names[i], ',');
+            getline(ss, studentNumbers[i], ',');
+
+            getline(ss, value, ',');
+            midterms[i] = stof(value);
+
+            getline(ss, value, ',');
+            secondExams[i] = stof(value);
+
+            getline(ss, value, ',');
+            homeworks[i] = stof(value);
+
+            getline(ss, value, ',');
+            finals[i] = stof(value);
+
+            getline(ss, value, ',');
+            attendanceCounts[i] = stoi(value);
+        } catch (const invalid_argument& e) {
+            cerr << "Gecersiz veri bulundu. Satir atlandi.\n";
+            continue;
+        }
+        i++;
+    }
+    file.close();
+}
+
+// average function
+void Student::average() {
+    cout<<"---ORTALAMA---\n";
+    for (int i = 0; i < studentCount; i++) {
+        averages[i] = midterms[i] * 0.2f + secondExams[i] * 0.2f +
+                      homeworks[i] * 0.2f + finals[i] * 0.4f;
+    }
+    for (int i = 0; i < studentCount; i++) {
+        //cout << ", Ortalama: " << fixed << setprecision(2) << averages[i] << "\n";
+    cout << names[i] << " ortlama :"<< averages[i]<<"\n";
+    }
+}
+
+// print function
+void Student::print(int option, const string& outputFile) {
+    ostream* out;
+    ofstream file;
+
+    if (!outputFile.empty()) {
+        file.open(outputFile);
+        if (!file.is_open()) {
+            cerr << "Dosya acilamadi: " << outputFile << endl;
+            return;
+        }
+        out = &file;
+    } else {
+        out = &cout;
+    }
+
+    if (option == -1) {
+        *out << "Tum Ogrenciler:\n";
+        for (int i = 0; i < studentCount; i++) {
+            *out << "Ad: " << names[i] 
+                 << ", Numara: " << studentNumbers[i] 
+                 << ", Vize: " << midterms[i] 
+                 << ", 2. Sinav: " << secondExams[i] 
+                 << ", Odev: " << homeworks[i] 
+                 << ", Final: " << finals[i] 
+                 << ", Yoklama: " << attendanceCounts[i] <<"\n";
+                 //<< ", Ortalama: " << fixed << setprecision(2) << averages[i] << "\n";
+        }
+    } else if (option == 0) {
+        *out << "Kalan Ogrenciler:\n";
+        for (int i = 0; i < studentCount; i++) {
+            if (averages[i] < 50.0f) {
+                *out << "Ad: " << names[i] 
+                     << ", Numara: " << studentNumbers[i]
+                    << ", Vize: " << midterms[i] 
+                 << ", 2. Sinav: " << secondExams[i] 
+                 << ", Odev: " << homeworks[i] 
+                 << ", Final: " << finals[i] 
+                 << ", Yoklama: " << attendanceCounts[i]<<"\n" ;
+                    // << ", Ortalama: " << fixed << setprecision(2) << averages[i] << "\n";
+            }
+        }
+    } else if (option == 1) {
+        *out << "Gecen Ogrenciler:\n";
+        for (int i = 0; i < studentCount; i++) {
+            if (averages[i] >= 50.0f) {
+                *out << "Ad: " << names[i] 
+                     << ", Numara: " << studentNumbers[i]
+                     << ", Vize: " << midterms[i] 
+                 << ", 2. Sinav: " << secondExams[i] 
+                 << ", Odev: " << homeworks[i] 
+                 << ", Final: " << finals[i] 
+                 << ", Yoklama: " << attendanceCounts[i]<<"\n" ;
+                    // << ", Ortalama: " << fixed << setprecision(2) << averages[i] << "\n";
+            }
+        }
+    }
+
+    if (file.is_open()) {
+        file.close();
+    }
+}
+
+int main() {
+    Student studentList;
+
+    studentList.readFromCSV("girdi.csv");
+
+    // Tum ogrencileri ve özelliklerini yazdirir
+    studentList.print();
+    
+    // Tum ogrencilerin not ortalaması
+    studentList.average();
+
+
+    // Kalan ogrencileri yazdirir
+    studentList.print(0);
+
+    // Gecen ogrencileri yazdirir
+    studentList.print(1);
+
+    // Tum ogrencileri dosyaya yazar
+    studentList.print(-1, "sonuclar.csv");
+
+    return 0;
+}
