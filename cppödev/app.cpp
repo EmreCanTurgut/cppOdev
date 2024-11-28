@@ -54,7 +54,6 @@ void Student::readFromCSV(const string& filename) {
     }
 
     string line;
-    getline(file, line); // Baslik satirini atla
 
     int count = 0;
     while (getline(file, line)) {
@@ -62,7 +61,7 @@ void Student::readFromCSV(const string& filename) {
     }
     file.clear();
     file.seekg(0);
-    getline(file, line);
+   
 
     studentCount = count;
 
@@ -77,27 +76,28 @@ void Student::readFromCSV(const string& filename) {
 
     int i = 0;
     while (getline(file, line)) {
-        stringstream ss(line);
+        stringstream ss(line); // getline direk string üzerinde çalışmaz, stringstream üzerinde çalışır
         string value;
 
         try {
-            getline(ss, names[i], ',');
+            // getline 3 parametresi şunlardır(okuma yapılcak yer,kaydedilcek yer, sınırladnırma yapılcak yer )
+            getline(ss, names[i], ','); 
             getline(ss, studentNumbers[i], ',');
 
-            getline(ss, value, ',');
-            midterms[i] = stof(value);
+            getline(ss, value, ','); 
+            midterms[i] = stof(value);// veriyi float türüne çevirip diziye ekle
 
             getline(ss, value, ',');
-            secondExams[i] = stof(value);
+            secondExams[i] = stof(value); // veriyi float türüne çevirip diziye ekle
 
             getline(ss, value, ',');
-            homeworks[i] = stof(value);
+            homeworks[i] = stof(value); // veriyi float türüne çevirip diziye ekle
 
             getline(ss, value, ',');
-            finals[i] = stof(value);
+            finals[i] = stof(value); // veriyi float türüne çevirip diziye ekle
 
             getline(ss, value, ',');
-            attendanceCounts[i] = stoi(value);
+            attendanceCounts[i] = stoi(value); // veriyi int türüne çevirip diziye ekle
         } catch (const invalid_argument& e) {
             cerr << "Gecersiz veri bulundu. Satir atlandi.\n";
             continue;
@@ -189,20 +189,20 @@ int main() {
     studentList.readFromCSV("girdi.csv");
 
     // Tum ogrencileri ve özelliklerini yazdirir
-    studentList.print();
+    //studentList.print();
     
     // Tum ogrencilerin not ortalaması
-    studentList.average();
+   studentList.average();
 
 
     // Kalan ogrencileri yazdirir
-    studentList.print(0);
+    //studentList.print(0);
 
     // Gecen ogrencileri yazdirir
-    studentList.print(1);
+    //studentList.print(1);
 
     // Tum ogrencileri dosyaya yazar
-    studentList.print(-1, "sonuclar.csv");
+    //studentList.print(-1, "sonuclar.csv");
 
     return 0;
 }
