@@ -107,7 +107,7 @@ void Student::readFromCSV(const string& filename) {
     file.close();
 }
 
-// average function
+
 void Student::average() {
     cout<<"---ORTALAMA---\n";
     for (int i = 0; i < studentCount; i++) {
@@ -115,22 +115,24 @@ void Student::average() {
                       homeworks[i] * 0.2f + finals[i] * 0.4f;
     }
     for (int i = 0; i < studentCount; i++) {
-        //cout << ", Ortalama: " << fixed << setprecision(2) << averages[i] << "\n";
+        
     cout << names[i] << " ortlama :"<< averages[i]<<"\n";
     }
 }
 
-// print function
+
 void Student::print(int option, const string& outputFile) {
     ostream* out;
-    ofstream file;
+    ofstream file; // dosyaya yazmak için
 
+// outputFile parametresi boş değilse dosya açmaya çalışılır
     if (!outputFile.empty()) {
         file.open(outputFile);
         if (!file.is_open()) {
             cerr << "Dosya acilamadi: " << outputFile << endl;
             return;
         }
+     // eğer ikinci parametre varsa out yazma işlemi olarak çalışır yoksa okuma
         out = &file;
     } else {
         out = &cout;
@@ -146,7 +148,7 @@ void Student::print(int option, const string& outputFile) {
                  << ", Odev: " << homeworks[i] 
                  << ", Final: " << finals[i] 
                  << ", Yoklama: " << attendanceCounts[i] <<"\n";
-                 //<< ", Ortalama: " << fixed << setprecision(2) << averages[i] << "\n";
+                
         }
     } else if (option == 0) {
         *out << "Kalan Ogrenciler:\n";
@@ -159,8 +161,7 @@ void Student::print(int option, const string& outputFile) {
                  << ", Odev: " << homeworks[i] 
                  << ", Final: " << finals[i] 
                  << ", Yoklama: " << attendanceCounts[i]<<"\n" ;
-                    // << ", Ortalama: " << fixed << setprecision(2) << averages[i] << "\n";
-            }
+                                }
         }
     } else if (option == 1) {
         *out << "Gecen Ogrenciler:\n";
@@ -173,7 +174,7 @@ void Student::print(int option, const string& outputFile) {
                  << ", Odev: " << homeworks[i] 
                  << ", Final: " << finals[i] 
                  << ", Yoklama: " << attendanceCounts[i]<<"\n" ;
-                    // << ", Ortalama: " << fixed << setprecision(2) << averages[i] << "\n";
+                    
             }
         }
     }
@@ -202,7 +203,7 @@ int main() {
     //studentList.print(1);
 
     // Tum ogrencileri dosyaya yazar
-    //studentList.print(-1, "sonuclar.csv");
+    studentList.print(-1, "sonuclar.csv");
 
     return 0;
 }
