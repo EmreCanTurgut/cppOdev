@@ -28,11 +28,7 @@ public:
     void print(int option = -1, const string& outputFile = "");
 };
 
-/*
-Student::Student() : names(nullptr), studentNumbers(nullptr), midterms(nullptr),
-                     secondExams(nullptr), homeworks(nullptr), finals(nullptr),
-                     attendanceCounts(nullptr), averages(nullptr), studentCount(0) {}
-*/
+
 Student::Student() {
     names = nullptr;
     studentNumbers = nullptr;
@@ -66,17 +62,18 @@ void Student::readFromCSV(const string& filename) {
     }
 
     string line;
-
+// kac satır oldugunu bulur
     int count = 0;
     while (getline(file, line)) {
         count++;
     }
-    file.clear();
-    file.seekg(0);
+
+    file.clear(); // eof geldikten sonra dosyayı tekrar okunabilir hale getirir
+    file.seekg(0); // okuma pozisyonu en başa alınır
    
 
     studentCount = count;
-
+// pointerlara değer ataması
     names = new string[studentCount];
     studentNumbers = new string[studentCount];
     midterms = new float[studentCount];
@@ -202,17 +199,17 @@ int main() {
     studentList.readFromCSV("girdi.csv");
 
     // Tum ogrencileri ve özelliklerini yazdirir
-    //studentList.print();
+    studentList.print();
     
     // Tum ogrencilerin not ortalaması
    studentList.average();
 
 
     // Kalan ogrencileri yazdirir
-    //studentList.print(0);
+    studentList.print(0);
 
     // Gecen ogrencileri yazdirir
-    //studentList.print(1);
+    studentList.print(1);
 
     // Tum ogrencileri dosyaya yazar
     studentList.print(-1, "sonuclar.csv");
