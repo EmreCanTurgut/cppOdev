@@ -28,10 +28,22 @@ public:
     void print(int option = -1, const string& outputFile = "");
 };
 
-// Constructor
+/*
 Student::Student() : names(nullptr), studentNumbers(nullptr), midterms(nullptr),
                      secondExams(nullptr), homeworks(nullptr), finals(nullptr),
                      attendanceCounts(nullptr), averages(nullptr), studentCount(0) {}
+*/
+Student::Student() {
+    names = nullptr;
+    studentNumbers = nullptr;
+    midterms = nullptr;
+    secondExams = nullptr;
+    homeworks = nullptr;
+    finals = nullptr;
+    attendanceCounts = nullptr;
+    averages = nullptr;
+    studentCount = 0;
+}
 
 // Destructor
 Student::~Student() {
